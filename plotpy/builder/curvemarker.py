@@ -1087,7 +1087,7 @@ class CurveMarkerCursorBuilder:
         if title:
             item.setTitle(title)
         else:
-            item.setTitle(_("Quiver"))
+            item.setTitle(_("Vector field"))
         item.setXAxis(BasePlot.AXIS_NAMES[xaxis])
         item.setYAxis(BasePlot.AXIS_NAMES[yaxis])
         return item
