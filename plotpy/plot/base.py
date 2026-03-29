@@ -53,6 +53,7 @@ from plotpy.items import (
     Marker,
     PolygonMapItem,
     PolygonShape,
+    QuiverItem,
 )
 from plotpy.styles.axes import AxesParam, AxeStyleParam, AxisParam, ImageAxesParam
 from plotpy.styles.base import GridParam, ItemParameters
@@ -175,7 +176,7 @@ class BasePlot(qwt.QwtPlot):
     DEFAULT_ACTIVE_XAXIS = X_BOTTOM
     DEFAULT_ACTIVE_YAXIS = Y_LEFT
 
-    AUTOSCALE_TYPES = (CurveItem, BaseImageItem, PolygonMapItem)
+    AUTOSCALE_TYPES = (CurveItem, BaseImageItem, PolygonMapItem, QuiverItem)
 
     #: Signal emitted by plot when an IBasePlotItem object was moved
     #:

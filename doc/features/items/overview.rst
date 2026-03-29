@@ -41,6 +41,13 @@ The following image items are available:
 * :py:func:`.get_plot_qrect`
 * :py:func:`.get_image_from_plot`
 
+Flow fields
+^^^^^^^^^^^
+
+The following flow field items are available:
+
+* :py:class:`.QuiverItem`: a flow field item with arrows
+
 Grid
 ^^^^
 

@@ -55,6 +55,7 @@ from .label import (
     SelectedLegendBoxItem,
 )
 from .polygonmap import PolygonMapItem
+from .quiver import QuiverItem
 from .shape import (
     AbstractShape,
     Axes,

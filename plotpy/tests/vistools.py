@@ -12,12 +12,12 @@ from typing import TYPE_CHECKING
 from plotpy.builder import make
 
 if TYPE_CHECKING:
-    from plotpy.items import BaseImageItem, CurveItem
+    from plotpy.items import BaseImageItem, CurveItem, QuiverItem
     from plotpy.plot import PlotDialog
 
 
 def show_items(
-    items: list[CurveItem | BaseImageItem],
+    items: list[CurveItem | BaseImageItem | QuiverItem],
     plot_type: str = "auto",
     wintitle: str = "Plot items",
     title: str = "Title",

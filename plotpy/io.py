@@ -594,6 +594,7 @@ register_serializable_items(
     "plotpy.items",
     [
         "CurveItem",
+        "QuiverItem",
         "PolygonMapItem",
         "ErrorBarCurveItem",
         "RawImageItem",

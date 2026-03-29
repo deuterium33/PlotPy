@@ -82,6 +82,13 @@ def test_pyplot():
     plt.hot()  # pylint: disable=no-member
     plt.show()
 
+    plt.figure("quiver")
+    x = np.linspace(-2, 2, 15)
+    y = np.linspace(-2, 2, 15)
+    X2, Y2 = np.meshgrid(x, y)
+    plt.quiver(X2, Y2, -Y2, X2, color="blue", title="Rotational field")
+    plt.show()
+
 
 if __name__ == "__main__":
     test_pyplot()

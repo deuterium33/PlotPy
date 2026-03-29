@@ -71,6 +71,12 @@ Histograms
 .. autoclass:: plotpy.items.Histogram2DItem
     :members:
 
+Flow fields
+^^^^^^^^^^^
+
+.. autoclass:: plotpy.items.QuiverItem
+   :members:
+
 Grid
 ^^^^
 

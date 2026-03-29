@@ -22,8 +22,8 @@ if TYPE_CHECKING:
 
     from qtpy.QtCore import QPointF
 
-    from plotpy.interfaces import ICurveItemType, IImageItemType
-    from plotpy.items import BaseImageItem, CurveItem
+    from plotpy.interfaces import ICurveItemType, IDecoratorItemType, IImageItemType
+    from plotpy.items import BaseImageItem, CurveItem, QuiverItem
     from plotpy.plot import BasePlot, PlotManager
 
 
@@ -651,11 +651,15 @@ class RectangularActionTool(InteractiveTool):
 class LastItemHolder:
     """Class to hold a weak reference to the last item"""
 
-    def __init__(self, item_type: IImageItemType | ICurveItemType) -> None:
+    def __init__(
+        self, item_type: IImageItemType | ICurveItemType | IDecoratorItemType
+    ) -> None:
         self._item_type = item_type
-        self._last_item: weakref.ReferenceType[CurveItem | BaseImageItem] | None = None
+        self._last_item: (
+            weakref.ReferenceType[CurveItem | BaseImageItem | QuiverItem] | None
+        ) = None
 
-    def set(self, item: CurveItem | BaseImageItem) -> None:
+    def set(self, item: CurveItem | BaseImageItem | QuiverItem) -> None:
         """Set the last item
 
         Args:
@@ -663,7 +667,7 @@ class LastItemHolder:
         """
         self._last_item = weakref.ref(item)
 
-    def get(self) -> CurveItem | BaseImageItem | None:
+    def get(self) -> CurveItem | BaseImageItem | QuiverItem | None:
         """Get the last item
 
         Returns:
@@ -673,7 +677,9 @@ class LastItemHolder:
             return self._last_item()
         return None
 
-    def update_from_selection(self, plot: BasePlot) -> CurveItem | BaseImageItem | None:
+    def update_from_selection(
+        self, plot: BasePlot
+    ) -> CurveItem | BaseImageItem | QuiverItem | None:
         """Update the last item from the selected items of the plot, and return it.
 
         Args:

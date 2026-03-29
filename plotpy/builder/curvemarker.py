@@ -6,11 +6,11 @@
 # pylint: disable=C0103
 
 """
-Curve/cursor/marker Item builder
---------------------------------
+Curve/cursor/marker/... Item builder
+------------------------------------
 
 This module provides a set of factory functions to simplify the creation of
-curve, cursor and marker items.
+curve, cursor, marker, histogram and flow field items.
 """
 
 # Note: when adding method to builder classes, please do not forget to update the
@@ -32,6 +32,7 @@ from plotpy.items import (
     ErrorBarCurveItem,
     HistogramItem,
     Marker,
+    QuiverItem,
     XRangeSelection,
     YRangeSelection,
 )
@@ -1023,3 +1024,70 @@ class CurveMarkerCursorBuilder:
             marker.set_movable(False)
             marker.set_resizable(False)
         return marker
+
+    def quiver(
+        self,
+        x: numpy.ndarray,
+        y: numpy.ndarray,
+        u: numpy.ndarray,
+        v: numpy.ndarray,
+        title: str = "",
+        color: str | None = None,
+        arrow_scale: float = 30.0,
+        arrow_head_size: float = 6.0,
+        headwidth: float = 0.7,
+        xaxis: str = "bottom",
+        yaxis: str = "left",
+    ) -> QuiverItem:
+        """Make a quiver (vector field) `plot item`
+
+        Displays arrows at grid positions (x, y) with direction and magnitude
+        defined by (u, v) components, similar to Matplotlib's ``quiver``.
+
+        Args:
+            x: 1D or 2D array of arrow X positions
+            y: 1D or 2D array of arrow Y positions
+            u: 1D or 2D array of arrow X components
+            v: 1D or 2D array of arrow Y components
+            title: plot item title. Default is ''
+            color: arrow color name. Default is None (black)
+            arrow_scale: scale factor for arrow length in pixels.
+             Default is 30.0. Larger values produce longer arrows.
+            arrow_head_size: size of arrow heads in pixels.
+             Default is 6.0
+            headwidth: arrow head width as multiple of head size.
+             Default is 0.7
+            xaxis: x axis name. Default is 'bottom'
+            yaxis: y axis name. Default is 'left'
+
+        Returns:
+            :py:class:`.QuiverItem` object
+
+        Example::
+
+            import numpy as np
+            x = np.linspace(-2, 2, 10)
+            y = np.linspace(-2, 2, 10)
+            X, Y = np.meshgrid(x, y)
+            U, V = -Y, X  # Rotational field
+            quiver(X, Y, U, V, title="Rotation", color="blue")
+        """
+        if color is None:
+            color = "black"
+        item = QuiverItem(
+            x,
+            y,
+            u,
+            v,
+            color=color,
+            arrow_scale=arrow_scale,
+            arrow_head_size=arrow_head_size,
+            headwidth=headwidth,
+        )
+        if title:
+            item.setTitle(title)
+        else:
+            item.setTitle(_("Quiver"))
+        item.setXAxis(BasePlot.AXIS_NAMES[xaxis])
+        item.setYAxis(BasePlot.AXIS_NAMES[yaxis])
+        return item

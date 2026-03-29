@@ -707,6 +707,27 @@ def pcolor(*args):
     return [img]
 
 
+def quiver(x, y, u, v, **kwargs):
+    """
+    Create a quiver (vector field) plot
+
+    Example::
+
+        import numpy as np
+        x = np.linspace(-2, 2, 15)
+        y = np.linspace(-2, 2, 15)
+        X, Y = np.meshgrid(x, y)
+        U, V = -Y, X
+        quiver(X, Y, U, V, color="blue")
+        show()
+    """
+    axe = gca()
+    item = make.quiver(x, y, u, v, **kwargs)
+    axe.add_plot(item)
+    _show_if_interactive()
+    return [item]
+
+
 def interactive(state):
     """Toggle interactive mode"""
     global _interactive
