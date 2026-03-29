@@ -14,3 +14,10 @@
   * New `quiver()` function in the interactive plotting interface (`plotpy.pyplot`)
   * Integrated with plot autoscale (initial zoom and middle-click reset)
   * Item icon displayed in the item list widget
+* Added "Invert colormap" checkbox directly in the Colormap Manager dialog. This
+  closes [Issue #53](https://github.com/PlotPyStack/PlotPy/issues/53):
+  * Reflects the current inversion state when the dialog is opened
+  * Allows toggling inversion from the colormap selection widget
+  * Updates the colormap preview in real-time when toggled
+  * Inversion is treated as a display parameter, independent of the colormap
+    definition (toggling does not mark the colormap as having unsaved changes)

@@ -605,10 +605,13 @@ class ColormapTool(CommandTool):
         ):
             return
         manager = ColorMapManager(
-            plot.parentWidget(), active_colormap=self._active_colormap.name
+            plot.parentWidget(),
+            active_colormap=self._active_colormap.name,
+            invert=self._active_colormap.invert,
         )
         manager.SIG_APPLY_COLORMAP.connect(self.update_plot)
         if exec_dialog(manager) and (cmap := manager.get_colormap()) is not None:
+            cmap.invert = manager.get_invert()
             self.activate_cmap(cmap)
 
     def activate_cmap(self, cmap: str | EditableColormap) -> None:
@@ -627,17 +630,20 @@ class ColormapTool(CommandTool):
             self.update_plot(self._active_colormap.name)
             self.update_status(plot)
 
-    def update_plot(self, cmap_name: str) -> None:
+    def update_plot(self, cmap_name: str, invert: bool | None = None) -> None:
         """Update the plot with the given colormap.
 
         Args:
             cmap_name: Colormap name
+            invert: Invert colormap state. If None, uses the active colormap's
+             invert state. Defaults to None.
         """
+        if invert is not None:
+            self._active_colormap.invert = invert
         plot: BasePlot = self.get_active_plot()
         items = get_selected_images(plot, IColormapImageItemType)
         for item in items:
-            cmap = item.get_color_map()
-            item.set_color_map(cmap_name, cmap.invert)
+            item.set_color_map(cmap_name, self._active_colormap.invert)
             plot.SIG_ITEM_PARAMETERS_CHANGED.emit(item)
         plot.invalidate()
 
@@ -659,6 +665,7 @@ class ColormapTool(CommandTool):
                 if cmap is not None:
                     icon = build_icon_from_cmap_name(cmap.name)
                     self._active_colormap = get_cmap(cmap.name)
+                    self._active_colormap.invert = cmap.invert
                     cmap_name = cmap.name
             else:
                 self.action.setEnabled(False)

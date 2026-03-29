@@ -122,6 +122,8 @@ class ColorMapManager(QW.QDialog):
     Args:
         parent: parent QWidget. Defaults to None.
         active_colormap: name of the active colormap.
+        invert: initial state of the 'Invert colormap' checkbox.
+         Defaults to False.
 
     .. note::
 
@@ -134,12 +136,13 @@ class ColorMapManager(QW.QDialog):
         that the colormap cannot be removed.
     """
 
-    SIG_APPLY_COLORMAP = QC.Signal(str)
+    SIG_APPLY_COLORMAP = QC.Signal(str, bool)
 
     def __init__(
         self,
         parent: QW.QWidget | None = None,
         active_colormap: str | None = None,
+        invert: bool = False,
     ) -> None:
         super().__init__(parent)
         self.setWindowIcon(get_icon("cmap_edit.png"))
@@ -148,6 +151,7 @@ class ColorMapManager(QW.QDialog):
         self.active_cmap_name = default_colormap = active_colormap
 
         self.__returned_colormap: EditableColormap | None = None
+        self.__returned_invert: bool = invert
 
         if default_colormap is None or not cmap_exists(default_colormap, ALL_COLORMAPS):
             default_colormap = next(iter(ALL_COLORMAPS))
@@ -171,6 +175,10 @@ class ColorMapManager(QW.QDialog):
         self._remove_btn.setEnabled(is_custom_cmap)
         self._remove_btn.clicked.connect(self.remove_colormap)
 
+        self._invert_checkbox = QW.QCheckBox(_("Invert colormap"))
+        self._invert_checkbox.setChecked(invert)
+        self._invert_checkbox.toggled.connect(self._on_invert_toggled)
+
         select_gbox = QW.QGroupBox(_("Select or create a colormap"))
         select_label = QW.QLabel(_("Colormap presets:"))
         select_gbox_layout = QW.QHBoxLayout()
@@ -179,6 +187,8 @@ class ColorMapManager(QW.QDialog):
         select_gbox_layout.addSpacing(10)
         select_gbox_layout.addWidget(add_btn)
         select_gbox_layout.addWidget(self._remove_btn)
+        select_gbox_layout.addSpacing(10)
+        select_gbox_layout.addWidget(self._invert_checkbox)
         select_gbox.setLayout(select_gbox_layout)
 
         # Edit the selected colormap
@@ -191,6 +201,13 @@ class ColorMapManager(QW.QDialog):
         else:
             current_cmap = None
         self.colormap_editor = ColorMapEditor(self, colormap=current_cmap)
+
+        # Apply initial invert state to the colormap preview
+        if invert:
+            cmap = self.colormap_editor.get_colormap()
+            if cmap is not None:
+                cmap.invert = True
+                self.colormap_editor.colormap_widget.COLORMAP_CHANGED.emit()
 
         self._edit_gbox = QW.QGroupBox(_("Edit the selected colormap"))
         edit_gbox_layout = QW.QVBoxLayout()
@@ -237,13 +254,32 @@ class ColorMapManager(QW.QDialog):
             if not self.current_changes_saved and not self.save_colormap():
                 return
             self._apply_btn.setEnabled(False)
-            self.SIG_APPLY_COLORMAP.emit(self.colormap_editor.get_colormap().name)
+            self.SIG_APPLY_COLORMAP.emit(
+                self.colormap_editor.get_colormap().name,
+                self._invert_checkbox.isChecked(),
+            )
         elif button is self._save_btn:
             self.save_colormap()
         elif self.bbox.buttonRole(button) == QW.QDialogButtonBox.AcceptRole:
             self.accept()
         else:
             self.reject()
+
+    def _on_invert_toggled(self, checked: bool) -> None:
+        """Callback for the 'Invert colormap' checkbox toggle.
+
+        Inversion is a display parameter independent of the colormap definition,
+        so toggling it only updates the preview without marking the colormap as
+        having unsaved changes.
+
+        Args:
+            checked: True if the checkbox is checked, False otherwise.
+        """
+        self.__returned_invert = checked
+        cmap = self.colormap_editor.get_colormap()
+        if cmap is not None:
+            cmap.invert = checked
+            self.colormap_editor.colormap_widget.draw_colormap_image()
 
     def _changes_not_saved(self) -> None:
         """Callback function to be called when the colormap is modified. Enables the
@@ -270,6 +306,7 @@ class ColorMapManager(QW.QDialog):
             index: index of the colormap in the QComboBox.
         """
         cmap_copy: EditableColormap = deepcopy(self._cmap_choice.itemData(index))
+        cmap_copy.invert = self._invert_checkbox.isChecked()
         self.colormap_editor.set_colormap(cmap_copy)
 
         is_custom_cmap = cmap_exists(cmap_copy.name, CUSTOM_COLORMAPS)
@@ -286,6 +323,14 @@ class ColorMapManager(QW.QDialog):
             selected colormap object
         """
         return self.__returned_colormap
+
+    def get_invert(self) -> bool:
+        """Return the current state of the 'Invert colormap' checkbox.
+
+        Returns:
+            True if the colormap should be inverted, False otherwise.
+        """
+        return self.__returned_invert
 
     def __get_new_colormap_name(self, title: str, name: str) -> str | None:
         """Return a new colormap name that does not already exists in the list of
