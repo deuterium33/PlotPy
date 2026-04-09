@@ -81,9 +81,20 @@ class MarkerParam(DataSet):
         self.symbol: SymbolParam
         self.text: TextStyleParam
         self.line: LineStyleParam
-        self.symbol.update_param(obj.symbol())
-        self.text.update_param(obj.label())
-        self.line.update_param(obj.linePen())
+        self.sel_symbol: SymbolParam
+        self.sel_text: TextStyleParam
+        self.sel_line: LineStyleParam
+        if obj.selected:
+            symbol = self.sel_symbol
+            text = self.sel_text
+            line = self.sel_line
+        else:
+            symbol = self.symbol
+            text = self.text
+            line = self.line
+        symbol.update_param(obj.symbol())
+        text.update_param(obj.label())
+        line.update_param(obj.linePen())
         self.markerstyle = MARKERSTYLE_NAME[obj.lineStyle()]
         self.spacing = obj.spacing()
 

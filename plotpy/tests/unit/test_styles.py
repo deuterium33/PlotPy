@@ -13,7 +13,9 @@ from qtpy import QtGui as QG
 from qwt import QwtSymbol
 
 from plotpy.config import UserConfig, _
+from plotpy.items import Marker
 from plotpy.styles.base import LineStyleParam, SymbolParam
+from plotpy.styles.shape import MarkerParam
 
 gettext.install("test")
 CONF = UserConfig({})
@@ -76,6 +78,28 @@ class TestLineStyle(unittest.TestCase):
         self.assertEqual(ls.width, 2)
         self.assertEqual(ls.style, "SolidLine")
         self.assertEqual(ls.color, "#ff0000")
+
+
+class TestMarkerParam(unittest.TestCase):
+    def test_update_param_preserves_unselected_style_when_selected(self):
+        param = MarkerParam(_("Marker"))
+        param.line.color = "#ff0000"
+        param.symbol.facecolor = "#ffff00"
+        param.text.textcolor = "#0000ff"
+        param.sel_line.color = "#00ff00"
+        param.sel_symbol.facecolor = "#00ffff"
+        param.sel_text.textcolor = "#ff00ff"
+        marker = Marker(markerparam=param)
+
+        marker.select()
+        marker.update_item_parameters()
+
+        self.assertEqual(marker.markerparam.line.color, "#ff0000")
+        self.assertEqual(marker.markerparam.symbol.facecolor, "#ffff00")
+        self.assertEqual(marker.markerparam.text.textcolor, "#0000ff")
+        self.assertEqual(marker.markerparam.sel_line.color, "#00ff00")
+        self.assertEqual(marker.markerparam.sel_symbol.facecolor, "#00ffff")
+        self.assertEqual(marker.markerparam.sel_text.textcolor, "#ff00ff")
 
     def test_saveconfig(self):
         ls = LineStyleParam(_("Line style"))
