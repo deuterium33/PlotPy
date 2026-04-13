@@ -227,9 +227,6 @@
             ],
             "options": {
                 "cwd": "${workspaceFolder}",
-                "env": {
-                    "PYTHONPATH": "C:/Dev/Projets/guidata",
-                },
                 "statusbar": {
                     "hide": true,
                 },
