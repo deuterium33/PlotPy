@@ -20,6 +20,8 @@ It is part of the [PlotPyStack](https://github.com/PlotPyStack) project, aiming 
 * [guidata](https://pypi.python.org/pypi/guidata) automatic GUI generation library
 * [PythonQwt](https://pypi.python.org/pypi/PythonQwt) plotting widgets library
 * [NumPy](https://pypi.python.org/pypi/NumPy) and [SciPy](https://pypi.python.org/pypi/SciPy) scientific computing libraries
+* [scikit-image](https://pypi.python.org/pypi/scikit-image) image processing library
+* [Pillow](https://pypi.python.org/pypi/Pillow) imaging library and [tifffile](https://pypi.python.org/pypi/tifffile) TIFF I/O library
 
 <img src="https://raw.githubusercontent.com/PlotPyStack/plotpy/master/doc/images/panorama.png">
 
@@ -27,7 +29,7 @@ See [documentation](https://plotpy.readthedocs.io/en/latest/) for more details o
 
 Copyrights and licensing:
 
-* Copyright © 2023 [CEA](https://www.cea.fr), [Codra](https://codra.net/), [Pierre Raybaut](https://github.com/PierreRaybaut).
+* Copyright © 2023-2026 [CEA](https://www.cea.fr), [Codra](https://codra.net/), [Pierre Raybaut](https://github.com/PierreRaybaut).
 * Licensed under the terms of the BSD 3-Clause (see [LICENSE](https://github.com/PlotPyStack/PlotPy/blob/master/LICENSE)).
 
 ## Features
@@ -38,7 +40,7 @@ General plotting features:
 
 * Ready-to-use [plot widgets and dialog boxes](https://plotpy.readthedocs.io/en/latest/features/plot/index.html)
 * [pyplot](https://plotpy.readthedocs.io/en/latest/features/pyplot.html): interactive plotting widgets, equivalent to `matplotlib.pyplot`, at least for the implemented functions
-* Supported [plot items](https://plotpy.readthedocs.io/en/latest/features/items/index.html): curves, images, contours, histograms, labels, shapes, annotations, ...
+* Supported [plot items](https://plotpy.readthedocs.io/en/latest/features/items/index.html): curves, images, contours, histograms, vector fields (quiver plots), labels, shapes, annotations, ...
 
 Interactive features (i.e. not only programmatic plotting but also with mouse/keyboard):
 
@@ -47,7 +49,7 @@ Interactive features (i.e. not only programmatic plotting but also with mouse/ke
 * Customizable aspect ratio for images
 * Tons of ready-to-use tools: plot canvas export to image file, image snapshot, interval selection, image rectangular filter, etc.
 * Curve fitting tool with automatic fit, manual fit with sliders, ...
-* Contrast adjustment panel for images: select the LUT by moving a range selection object on the image levels histogram, eliminate outliers, ...
+* Contrast adjustment panel for images: select the LUT by moving a range selection object on the image levels histogram, eliminate outliers, invert colormaps, ...
 * X-axis and Y-axis cross-sections: support for multiple images, average cross-section tool on a rectangular area, ...
 * Apply any affine transform to displayed images in real-time (rotation, magnification, translation, horizontal/vertical flip, ...)
 

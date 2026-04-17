@@ -24,9 +24,13 @@ PythonQwt and guidata.
 ```
 plotpy/
 |- builder/         # Factory helpers (`make.curve`, `make.image`, ...)
-|- items/           # Plot items (curves, images, shapes, annotations)
+|- items/           # Plot items (curves, images, shapes, annotations, quiver)
+|- interfaces/      # Base interfaces for tools and items
+|- mathutils/       # Computation utilities (colormaps, image filters)
 |- panels/          # Side panels and dockable tools
 |- plot/            # Plot widgets, plot manager, interaction plumbing
+|- pyplot.py        # Simplified matplotlib-like interactive plotting API
+|- styles/          # Item style management
 |- tools/           # Interactive tools and commands
 |- widgets/         # Ready-to-use composite widgets
 |- tests/           # pytest suite
@@ -65,6 +69,7 @@ from plotpy.builder import make
 
 curve = make.curve(x, y, title="Signal", color="b")
 image = make.image(data, title="Image")
+quiver = make.quiver(x, y, dx, dy, title="Vector field")
 ```
 
 Prefer following existing builder APIs when adding new items so interactive
@@ -101,6 +106,11 @@ the UI or documentation surfaced through the application.
 |------|---------|
 | `plotpy/builder/` | Public item construction helpers |
 | `plotpy/items/` | Plot items and rendering behavior |
+| `plotpy/items/quiver.py` | QuiverItem for 2D vector field plots |
+| `plotpy/interfaces/` | Base interfaces for tools and items |
+| `plotpy/mathutils/` | Computation utilities (colormaps, filters) |
+| `plotpy/styles/` | Item style management |
+| `plotpy/pyplot.py` | Simplified matplotlib-like plotting API |
 | `plotpy/plot/` | Plot widgets, manager, event flow |
 | `plotpy/tools/` | Interactive tool implementations |
 | `plotpy/panels/` | UI panels around plots |
