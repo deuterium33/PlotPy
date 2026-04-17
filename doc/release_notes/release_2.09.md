@@ -21,3 +21,18 @@
   * Updates the colormap preview in real-time when toggled
   * Inversion is treated as a display parameter, independent of the colormap
     definition (toggling does not mark the colormap as having unsaved changes)
+
+🛠️ Bug fixes:
+
+* Fixed marker style parameters being overwritten when updating selected markers:
+  * `MarkerParam.update_param` now correctly reads back the selected or unselected
+    visual state into the matching parameter set, instead of overwriting the base
+    (normal) style with the selected style
+  * This preserves distinct normal and selected appearance for markers
+
+🔧 Other changes:
+
+* CI: gate PyPI deployment on test suite passing
+* Development environment: improved `scripts/run_with_env.py` to support multiple
+  Python environment contexts (WinPython, venv, etc.) with legacy support for the
+  `WINPYDIRBASE` environment variable
