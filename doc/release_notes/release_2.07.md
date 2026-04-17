@@ -14,6 +14,9 @@ Other changes:
 
 * Updated `guidata` dependency to V3.10.0
 * Using new `guidata` translation utility based on `babel`
+* Development environment:
+  * Historically, the default Python interpreter for development was handled by the `PPSTACK_PYTHONEXE` environment variable, for example to run VS Code tasks with the correct Python interpreter.
+  * This approach has been replaced by relying on the virtual environment management as provided by VS Code itself, which is more standard and compatible with various tools.
 
 ## PlotPy Version 2.7.4 (2025-04-26) ##
 
