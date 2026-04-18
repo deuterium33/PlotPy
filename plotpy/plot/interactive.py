@@ -253,10 +253,13 @@ class Figure:
         w = W / (jmax - jmin + 1)
         h = H / (imax - imin + 1)
         paint = QG.QPainter(device)
-        for (i, j), ax in list(self.axes.items()):
-            oy = (i - imin) * h
-            ox = (j - jmin) * w
-            ax.widget.print_(paint, QC.QRect(ox, oy, w, h))
+        try:
+            for (i, j), ax in list(self.axes.items()):
+                oy = (i - imin) * h
+                ox = (j - jmin) * w
+                ax.widget.print_(paint, QC.QRect(ox, oy, w, h))
+        finally:
+            paint.end()
 
 
 class Axes:
