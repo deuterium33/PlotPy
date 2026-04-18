@@ -64,6 +64,12 @@ def scale_data_to_dtype(data: np.ndarray, dtype: np.dtype) -> np.ndarray:
     info = np.iinfo(dtype)
     dmin = data.min()
     dmax = data.max()
+    if dmax == dmin:
+        # Constant data: avoid 0/0 division (which would yield NaN). Map every
+        # sample to the dtype range minimum so downstream image rendering keeps
+        # working instead of seeing NaNs.
+        data = np.full_like(data, float(info.min))
+        return np.array(data, dtype)
     data -= dmin
     data = data * float(info.max - info.min) / (dmax - dmin)
     data = data + float(info.min)
