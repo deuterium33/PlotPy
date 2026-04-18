@@ -19,7 +19,7 @@ try:
 except ImportError:
     pydicom = None
 
-from plotpy.io import imread, imwrite
+from plotpy.io import imread, imwrite, scale_data_to_dtype
 
 
 def compute_image(N=1000, M=1000):
@@ -115,6 +115,35 @@ def test_imread_txt(tmpdir):
     data = imread(img)
     assert data.shape == (50, 255)
     assert data[0, 25] == 25
+
+
+def test_scale_data_to_dtype_constant_array():
+    """Constant arrays must not produce NaN/Inf when rescaled.
+
+    When ``data.min() == data.max()``, the original implementation divided
+    by zero (raising ``RuntimeWarning: invalid value encountered in true_divide``
+    and producing a NaN-filled intermediate array) before casting to the
+    target dtype. The fix avoids the division entirely.
+    """
+    import warnings as _warnings
+
+    data = np.full((10, 10), 5.0, dtype=np.float64)
+    with _warnings.catch_warnings():
+        _warnings.simplefilter("error", category=RuntimeWarning)
+        result = scale_data_to_dtype(data, np.uint8)
+    assert result.dtype == np.uint8
+    assert np.isfinite(result).all()
+    assert (result == result[0, 0]).all()
+
+
+def test_scale_data_to_dtype_regular():
+    """Regression test: regular arrays still rescale to the full dtype range."""
+    data = np.array([0.0, 0.5, 1.0], dtype=np.float64)
+    result = scale_data_to_dtype(data, np.uint8)
+    assert result.dtype == np.uint8
+    info = np.iinfo(np.uint8)
+    assert int(result[0]) == info.min
+    assert int(result[-1]) == info.max
 
 
 if __name__ == "__main__":

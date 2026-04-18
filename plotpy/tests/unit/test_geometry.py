@@ -83,7 +83,21 @@ def test_coordinates_computations() -> None:
     assert np.allclose(angle_inv, np.rad2deg(np.arctan2(2.0, 2.0)))
 
 
+def test_vector_projection_zero_length() -> None:
+    """``vector_projection`` must not raise when the segment has zero length.
+
+    When points A and B are identical, the projection direction is undefined.
+    The function should fall back to returning point B (= point A) instead of
+    triggering a ``ZeroDivisionError`` / ``RuntimeWarning`` from a 0/0 division.
+    """
+    vect = np.array([5.0, 6.0])
+    proj = geom.vector_projection(vect, 1.0, 2.0, 1.0, 2.0)
+    assert np.all(np.isfinite(proj))
+    assert np.allclose(proj, np.array([1.0, 2.0]))
+
+
 if __name__ == "__main__":
     test_transform_matrix()
     test_vector_operations()
     test_coordinates_computations()
+    test_vector_projection_zero_length()
