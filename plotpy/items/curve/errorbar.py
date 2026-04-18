@@ -221,13 +221,13 @@ class ErrorBarCurveItem(CurveItem):
         xi = self.dsamp(self._x)[i]
         yi = self.dsamp(self._y)[i]
         xmin, xmax, ymin, ymax = self.get_minmax_arrays()
-        if abs(y - y) > abs(y - ymin[i]):
+        if abs(y - yi) > abs(y - ymin[i]):
             yi = ymin[i]
-        elif abs(y - y) > abs(y - ymax[i]):
+        elif abs(y - yi) > abs(y - ymax[i]):
             yi = ymax[i]
-        if abs(x - x) > abs(x - xmin[i]):
+        if abs(x - xi) > abs(x - xmin[i]):
             xi = xmin[i]
-        elif abs(x - x) > abs(x - xmax[i]):
+        elif abs(x - xi) > abs(x - xmax[i]):
             xi = xmax[i]
         return xi, yi
 
