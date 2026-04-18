@@ -25,6 +25,8 @@ Reference
 
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 
 
@@ -35,12 +37,17 @@ def get_nan_min(data: np.ndarray | np.ma.MaskedArray) -> float:
         data: Data array (or masked array)
 
     Returns:
-        float: Minimum value of data, ignoring NaNs
+        float: Minimum value of data, ignoring NaNs (NaN if data is empty
+         or contains only NaNs)
     """
     if isinstance(data, np.ma.MaskedArray):
         data = data.data
+    if data.size == 0:
+        return float("nan")
     if data.dtype.name in ("float32", "float64", "float128"):
-        return np.nanmin(data)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            return np.nanmin(data)
     else:
         return data.min()
 
@@ -52,12 +59,17 @@ def get_nan_max(data: np.ndarray | np.ma.MaskedArray) -> float:
         data: Data array (or masked array)
 
     Returns:
-        float: Maximum value of data, ignoring NaNs
+        float: Maximum value of data, ignoring NaNs (NaN if data is empty
+         or contains only NaNs)
     """
     if isinstance(data, np.ma.MaskedArray):
         data = data.data
+    if data.size == 0:
+        return float("nan")
     if data.dtype.name in ("float32", "float64", "float128"):
-        return np.nanmax(data)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            return np.nanmax(data)
     else:
         return data.max()
 
