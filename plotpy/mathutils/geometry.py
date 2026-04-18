@@ -146,7 +146,12 @@ def vector_projection(
     """
     assert dv.shape == (2,)
     v_ab = np.array((xb - xa, yb - ya))
-    u_ab = v_ab / np.linalg.norm(v_ab)
+    norm = np.linalg.norm(v_ab)
+    if norm == 0:
+        # Points A and B are identical: projection direction is undefined.
+        # Return point B (= point A) rather than raising on 0/0 division.
+        return np.array((xb, yb))
+    u_ab = v_ab / norm
     return np.vdot(u_ab, dv) * u_ab + np.array((xb, yb))
 
 
